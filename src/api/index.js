@@ -8,6 +8,9 @@ const instance = axios.create({
 
 export const pokedexService = {
   getPokemons() {
-    return instance.get(endpoints.pokemon)
+    return instance.get(endpoints.listPokemon)
+  },
+  getPokemon(id) {
+    return instance.get(endpoints.pokemon + id)
   }
 }
