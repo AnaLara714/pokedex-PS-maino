@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import { pokedexService } from '@/api'
+import { getName } from '@/utils/functionsUtils'
 
 export default createStore({
   state: {
@@ -28,6 +29,18 @@ export default createStore({
       } catch (error) {
         console.error('Erro ao buscar pokemons', error)
       }
+    },
+    filterPokemons({ state, commit }, filter) {
+      const { id, name, species, type } = filter
+
+      const filteredPokemons = state.pokemons.filter((pokemon) => {
+        if (id && pokemon.id != id) return false
+        if (name && !pokemon.name.toLowerCase().includes(name.toLowerCase())) return false
+        if (type && !pokemon.type.toLowerCase().includes(type.toLowerCase())) return false
+        if (species && !pokemon.species.toLowerCase().includes(species.toLowerCase())) return false
+        return true
+      })
+      commit('setPokemonsFiltered', filteredPokemons)
     }
   },
   mutations: {
@@ -36,6 +49,7 @@ export default createStore({
     },
     setPokemon(state, pokemon) {
       state.pokemon = pokemon
+      alert('pokemon capturdo:' + getName(pokemon) + 'mais info' + pokemon.id)
     },
     setPokemonsFiltered(state, pokemons) {
       state.filteredPokemons = pokemons

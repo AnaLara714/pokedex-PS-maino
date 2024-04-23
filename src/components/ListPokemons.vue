@@ -1,21 +1,41 @@
 <script>
 import { getID } from '@/utils/functionsUtils'
+import { mapActions, mapState } from 'vuex'
+// import SeeMorePokemon from './SeeMorePokemon.vue'
 export default {
   name: 'ListPokemons',
-
+  components: {
+    // SeeMorePokemon
+  },
+  data() {
+    return {
+      filter: {
+        id: null,
+        name: '',
+        type: '',
+        species: ''
+      }
+    }
+  },
   mounted() {
     this.fetchPokemons()
   },
   computed: {
     pokemons() {
       return this.$store.state.pokemons
-    }
+    },
+    ...mapState(['filteredPokemons'])
   },
   methods: {
+    getID,
+    ...mapActions(['filterPokemons']),
+    applyFilter() {
+      this.filterPokemons(this.filter)
+      // this.$store.dispatch('filterPokemons', this.filter)
+    },
     fetchPokemons() {
       this.$store.dispatch('fetchPokemons')
     },
-    getID,
     fetchPokemon(pokemon) {
       this.$store.dispatch('fetchPokemon', getID(pokemon))
     }
@@ -24,6 +44,33 @@ export default {
 </script>
 
 <template>
+  <!-- <div>
+    <h1>Lista de Usuários Filtrados</h1>
+    <div>
+      <label for="name">Nome:</label>
+      <input type="text" id="name" v-model="filter.name" />
+    </div>
+    <div>
+      <label for="id">ID:</label>
+      <input type="number" id="id" v-model.number="filter.id" />
+    </div>
+    <div>
+      <label for="type">Tipo:</label>
+      <input type="text" id="type" v-model="filter.type" />
+    </div>
+    <div>
+      <label for="species">Espécie:</label>
+      <input type="text" id="species" v-model="filter.species" />
+    </div>
+    <button @click="`${applyFilter()}`">Aplicar Filtro</button>
+    {{ console.log(filteredPokemons) }}
+    <ul v-if="filteredPokemons.length > 0">
+      <li v-for="pokemon in filteredPokemons" :key="pokemon.id">
+        {{ pokemon.name }} ({{ pokemon.type }}, {{ pokemon.species }})
+      </li>
+    </ul>
+    <div v-else></div>
+    -->
   <div v-for="pokemon in pokemons" :key="pokemon.name" class="item-pokemon">
     <div class="info-pokemon">
       <img
